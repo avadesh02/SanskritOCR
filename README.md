@@ -6,7 +6,7 @@ The DevDigitizer project is focused on building a robust and accurate Optical Ch
 
 # Installation
 
-The Software is currently being refactored and will be availble for use very soon.
+The Software is currently being refactored for public use and will be made availble for use very soon.
 
 # Python Dependencies
 

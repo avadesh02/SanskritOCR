@@ -19,5 +19,4 @@ The Software is currently being refactored and will be availble for use very soo
 # Citing DevDigitizer
 
 If you want to cite **DevDigitizer** in your papers, please use the following bibtex line:
-`
-Avadesh, Meduri, and Navneet Goyal. "Optical Character Recognition for Sanskrit Using Convolution Neural Networks." In 2018 13th IAPR International Workshop on Document Analysis Systems (DAS), pp. 447-452. IEEE, 2018.`
+<cite> Avadesh, Meduri, and Navneet Goyal. "Optical Character Recognition for Sanskrit Using Convolution Neural Networks." In 2018 13th IAPR International Workshop on Document Analysis Systems (DAS), pp. 447-452. IEEE, 2018. </cite>

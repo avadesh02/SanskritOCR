@@ -301,7 +301,7 @@ def detect_store_letters(img):
 '''
 
 ############################### FOR LEARNING BASED LETTER DETECTION #############################
-'''
+
 def get_word_coordinates(img):
 	# This functions returns an nx1x4 array of co-ordinates of the letters
 	pagesegmenter = word_finder(img)
@@ -402,6 +402,6 @@ def show_letters(img):
 	cv2.waitKey()
 
 ## To read image
-img = '../pages/3.jpg'
+img = './../../pages/3.jpg'
 show_letters(img)
-'''
+

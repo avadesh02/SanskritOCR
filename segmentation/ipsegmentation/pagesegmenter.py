@@ -2,15 +2,6 @@
 # Author: Avadesh
 # Date: 2016
 
-### imports ####################################################################################
-import cv2
-import numpy as np
-from matplotlib import pyplot as plt
-import os
-import shutil
-
-###############################################################################################
-
 class word_finder:
 	## Finds words and lines in the image by calculating white pixel density\
 
@@ -402,6 +393,6 @@ def show_letters(img):
 	cv2.waitKey()
 
 ## To read image
-img = './../../pages/3.jpg'
-show_letters(img)
+#img = './../../pages/3.jpg'
+#show_letters(img)
 

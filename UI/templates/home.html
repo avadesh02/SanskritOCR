@@ -1,0 +1,29 @@
+<html>
+	<center><h1><strong>
+		Welcome to the DevDigitizer Home Page
+	</strong></h1></center>
+
+	<hr>
+
+	<p><center> The DevDigitizer project aims to build a robust Optical Character Recognition Software for Samskritam (Devanagari Script). </center> </p>
+
+	<hr>
+
+	<h2>Digitize a Sanskrit Page</h2>
+
+	<p>Upload an image containing sanskrit text for digitization. The uploaded image will be converted into a word document(docx).</p>
+	<div id = "image_digitization">
+		<form action = "{{(url_for('image_get'))}}" method = "POST" enctype = "multipart/form-data">
+			<input type = "file" id = "pic" name = "page" accept = "image/*">
+			<input type = "submit" value = "Digitize">
+		</form>
+	</div>	
+
+
+	<hr>
+
+	<h2>User level contribution (Data Annotation)</h2>
+	<p>Will be integrated soon. We are happy that you have chosen to contribute to the project </p>	
+
+
+</html>

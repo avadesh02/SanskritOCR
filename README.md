@@ -1,6 +1,6 @@
 # DevDigitizer Project (Sanskrit OCR)
 
-The DevDigitizer project is a research project that aims to build a state of the art Optical Character Recognition Software for Sanskrit/ Samskritam (Devanagari Script). The project is focused on researching and developing novel document analysis, computer vision, deep learning and search algorithms to build a robust and highly accurate OCR system.  
+The DevDigitizer project aims to build a state of the art Optical Character Recognition Software for Sanskrit/ Samskritam (Devanagari Script). The project is commited to developing novel document analysis, computer vision, deep learning and search algorithms through persistent research, inorder to build a robust and highly accurate Sanskrit OCR system.  
 
 **The**  **Vision**  of the DevDigitizer project is to facilitate digitization and preservation of ancient indian texts on Science, Math, Literature, Poetry etc... written in Sanskrit (Devanagari Script). Digitization of ancient Manuscripts will increase the ease of access to these documents for further research and study.
 

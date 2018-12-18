@@ -39,19 +39,34 @@ class textconverter:
 					word = word[letter_index:]
 	
 		# index value of english input to convert to unicode form
-			unicode_index = list(self.english_input).index(letter[:-1])
-			sanskrit_word = sanskrit_word + self.unicodemap[unicode_index]
-			print(sanskrit_word)
+			if len(sanskrit_word) < 2:
+				unicode_index = np.min(np.where(self.english_input == letter[:-1]))
+				sanskrit_word = sanskrit_word + self.unicodemap[unicode_index]
+			else:
+				if letter[:-1] == 'a':
+					# Nothing is required to be added
+					continue
+				elif letter[:-1] == 'i':
+					# i matra to be added before the word
+					unicode_index = np.max(np.where(self.english_input == letter[:-1]))
+					for check in range(4,7):
+						if sanskrit_word[-check] == '\\':
+							sanskrit_word = sanskrit_word[:-check] + self.unicodemap[unicode_index] + sanskrit_word[-check:]
+				else:	
+					unicode_index = np.max(np.where(self.english_input == letter[:-1]))
+					sanskrit_word = sanskrit_word + self.unicodemap[unicode_index]
+				
 
 		# typecasting to unicode. NOTE: only works in python 3
 		sanskrit_word = sanskrit_word[1:]
 		return sanskrit_word
 
 
+
 ### Test ###
 
 #word = input("enter an english form of a sanskrit word to convert\n")
-word = 'aa'
+word = 'avadesh'
 tt = textconverter()
 print(tt.englishtosanskrit(word))
 

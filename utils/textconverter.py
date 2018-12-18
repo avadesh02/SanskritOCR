@@ -66,7 +66,7 @@ class textconverter:
 ### Test ###
 
 #word = input("enter an english form of a sanskrit word to convert\n")
-word = 'avadesh'
+word = 'raama'
 tt = textconverter()
 print(tt.englishtosanskrit(word))
 

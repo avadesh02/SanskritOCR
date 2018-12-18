@@ -66,8 +66,10 @@ class textconverter:
 ### Test ###
 
 #word = input("enter an english form of a sanskrit word to convert\n")
-word = 'avadesh'
+word = 'iimli'
 tt = textconverter()
-print(tt.englishtosanskrit(word))
+word = tt.englishtosanskrit(word)
+print(word)
+print(word.encode().decode('unicode-escape'))
 
 		

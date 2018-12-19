@@ -29,8 +29,8 @@ for i in range(0,10):
 	print(data_Y[i])
 	Image.fromarray(data_X[i],'RGB').show()
 '''	
-data_X = np.load("Xdata.npy")
-data_Y = np.load("Ydata.npy")
+data_X = np.load("./Data/Xdata.npy")
+data_Y = np.load("./Data/Ydata.npy")
 data_Y = np.eye(np.max(data_Y)+1)[data_Y]
 
 #initialising the CNN
@@ -78,7 +78,7 @@ classifier.compile(optimizer = opt, loss = 'categorical_crossentropy', metrics =
 
 history = classifier.fit(x=data_X,y=data_Y,batch_size=128,epochs=50,validation_split=0.01)
 
-plot_model(classifier, to_file='Final_model.png')
+plot_model(classifier, to_file='./Results/Final_model.png')
 
 # Plot training & validation accuracy values
 plt.plot(history.history['acc'])
@@ -102,10 +102,10 @@ plt.show()
 #to save model to disk
 # serialize model to JSON
 model_json = classifier.to_json()
-with open("Final_model.json", "w") as json_file:
+with open("./Results/Final_model.json", "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
-classifier.save_weights("Final_model.h5")
+classifier.save_weights("./Results/Final_model.h5")
 print("Saved model to disk")
 
 

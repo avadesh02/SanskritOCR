@@ -1,0 +1,27 @@
+<html>
+
+	<center><h1><strong>
+                Welcome to the DevDigitizer Home Page
+        </strong></h1></center>
+
+        <hr>
+	
+        <h2><center>Segmented Page</center></h2>
+
+	<table cellspacing="0px">
+		<tr>
+			<td width="20%">
+				<div id='segmented_words'>
+					{%for word in range(0,100)%}
+						{% set word = word|string + '.png' -%}
+						<img src = "{{url_for('upload_words', filename=word)}}">
+					{%endfor%}
+				</div>
+			</td>
+		</tr>
+	</table>
+
+
+
+
+</html>

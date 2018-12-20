@@ -11,8 +11,13 @@ having to make any changes to the standardized API used in this file
 from flask import *
 import os
 import sys
+import shutil
+from segmentation.ipsegmentation.pagesegmenter import pagesegmenter
 
-app = Flask(__name__, template_folder='./UI/templates')
+
+app = Flask(__name__, template_folder='./UI/templates', static_url_path = "/words")
+app.config['SECRET_KEY'] = 'oh_so_secret'
+
 
 @app.route('/')
 def home():
@@ -35,12 +40,42 @@ def image_get():
 	file.save('./tmp/page/image.jpg')
 	return redirect(url_for('image_segment'))
 
+@app.route('/image/segment/letters')
+def image_segment():
+	try:
+		shutil.rmtree('./words')
+		shutil.rmtree('./letters')
+	except:
+		print("Creating Directories: Words, letters")
+
+	os.mkdir('./words')
+	os.mkdir('./letters')
+	
+	img = './tmp/page/image.jpg'
+	imagesegmenter = pagesegmenter(img)
+	letter_array = imagesegmenter.get_letter_coordinates()
+	#letter_array = imagesegmenter.get_word_coordinates()
+	
+	session['letter_array'] = letter_array
+	return redirect(url_for('image_segmented_show'))
+
+@app.route('/image/segment/show')
+def image_segmented_show():
+	return render_template('image_segmented.html',letter_array = session['letter_array'])
 
 
 
 
+@app.route('/upload/words/<filename>')
+def upload_words(filename):
+	return send_from_directory('words',filename)
 
-#################################################################################################
+@app.route('/upload/letters/<filename>')
+def upload_letters(filename):
+	return send_from_directory('letters',filename)
+
+################################################################################################
+
 
 if __name__ == '__main__':
 	app.run(debug=True)

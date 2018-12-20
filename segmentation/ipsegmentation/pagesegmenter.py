@@ -2,6 +2,14 @@
 # Author: Avadesh
 # Date: 2016
 
+### imports ####################################################################################
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+import os
+import shutil
+###############################################################################################
+
 class word_finder:
 	## Finds words and lines in the image by calculating white pixel density\
 
@@ -67,7 +75,7 @@ class word_finder:
 					for x2 in range(x+4,len(x_count_matrix[y])-5):
 						if x_count_matrix[y][x2] > 1:
 							word_matrix[y].append(x2 + l_limit)
-						 	x = x2
+							x = x2
 							break
 				x += 4
 			word_matrix[y].append(r_limit)
@@ -233,166 +241,116 @@ class letter_finder:
 		#self.show_letters()
 		#self.show_image()
 
-##################################test functions below###########################
-'''
-## To read image
-img = '../pages/1.jpg'
-im = cv2.imread(img,0)
-im = cv2.resize(im,(0,0),fx=0.75,fy=0.75)
-'''
-## initializing an instance
-#pagesegmenter = word_finder(img)
-'''
-## To detect lines and show lines
-# find_words finds lines and words
-pagesegmenter.find_words(0, pagesegmenter.cols / 2)
-pagesegmenter.show_lines(0, pagesegmenter.cols / 2)
+############################### FOR SEGMENTATION IMPORTS #############################
 
-## To detect words
-pagesegmenter.show_words()
-pagesegmenter.show_image()
-'''
+class pagesegmenter:
+	### class for segmenting a page
+	## input is the path to image for segmentation
 
-'''
-## To detect and store words
-## For letter detection the words must be detected and stored in a directory initially
-## Run segment_page_into_words() for detecting and storing the image
-## TODO: Fix this requirement for directory storing
-pagesegmenter.segment_page_into_words()
+	def __init__(self,img):
+		self.img = img		
 
-## Detecting letters
+	def get_word_coordinates(self):
+		# This functions returns an nx1x4 array of co-ordinates of the letters
+		pagesegmenter = word_finder(self.img)
+		pagesegmenter.find_words(20,pagesegmenter.cols/2)
+		word_coordinates_array = pagesegmenter.word_array
+		#pagesegmenter.show_words()
+		pagesegmenter.store_words(0)
+		pagesegmenter.find_words(pagesegmenter.cols/2, pagesegmenter.cols)
+		#pagesegmenter.show_words()
+		#pagesegmenter.show_image()
+		tmp = len(os.listdir('./words'))
+		pagesegmenter.store_words(tmp)
+		word_coordinates_array += pagesegmenter.word_array
 
-word_img = './words/0.png'
+		# Reshaping word_cordinate array into n*1*4 array = [x1,y1, x2, y2] - top left and bottom right
+		# Refer to open cv for co-ordinates convention
 
-## Instatiation of letter finder class
-word = letter_finder(word_img)
-# for detecting the shirorekha/ header line and removing the line.
-y = word.find_line()
-word.remove_line(y)
+		tmp = []
+		for i in range(0, len(word_coordinates_array),4):
+			tmp.append(word_coordinates_array[i:i+4])
+		
+		word_coordinates_array = tmp
+		return word_coordinates_array
 
-# For detecting letters and displaying the segmentation results
-word.find_letters(0,0, word.cols, word.final_image.shape[0])
-word.show_letters()
-word.show_image()
-# For detecting letters and displaying the segmentation results
-word.find_letters(0,0, word.cols, word.final_image.shape[0])
-'''
-'''
-## Use the following function to test - detection and storing letters
-def detect_store_letters(img):
-	pagesegmenter = word_finder(img)
-	pagesegmenter.segment_page_into_words()
+	def show_words(img):
+		word_array = self.get_word_coordinates(self.img)
+		im = cv2.imread(self.img)
+		im = cv2.resize(im,(0,0),fx=0.75,fy=0.75)
 
-	no_words = len(os.listdir('./words')) - 1
+		for i in range(0, len(word_array)-1):
+			cv2.rectangle(im,(word_array[i][0],word_array[i][1]),(word_array[i][2],word_array[i][3]),0,1)
+		cv2.imshow('t',im)
+		cv2.waitKey()
 
-	for index in range(no_words):
-		word_img = './words/' + str(index) + '.png'
-		word = letter_finder(word_img)
-		word.store_cropped_letters(index)
-'''
+	def get_letter_coordinates(self):
+		
+		# Making words and letter directories
+		try:
+			shutil.rmtree('./words')
+			shutil.rmtree('./letters')
+		except:
+			print("Creating Directories: Words, letters")
+		
+		os.mkdir('./words')
+		os.mkdir('./letters')
+		word_array = self.get_word_coordinates()
+		no_words = len(os.listdir('./words')) - 1
+		#no_words = 20
+		local_letter_coordinates = []
+		for index in range(no_words):
+			word_img = './words/' + str(index) + '.png'
+			word = letter_finder(word_img)
+			y = word.find_line()
+			word.remove_line(y)
+			word.find_letters(0,0,word.cols,word.final_image.shape[0])
+			word.store_cropped_letters(index)
+			local_letter_coordinates.append(word.letter_matrix)
 
-############################### FOR LEARNING BASED LETTER DETECTION #############################
+		# Converting letters into global coordinate frame
+		# Structure of letter_coordinates = n * m * 4
+		# n = number of words
+		# m = number of letters in the words
+		# 4 = top left and bottom right corner of box
 
-def get_word_coordinates(img):
-	# This functions returns an nx1x4 array of co-ordinates of the letters
-	pagesegmenter = word_finder(img)
-	pagesegmenter.find_words(20,pagesegmenter.cols/2)
-	word_coordinates_array = pagesegmenter.word_array
-	#pagesegmenter.show_words()
-	pagesegmenter.store_words(0)
-	pagesegmenter.find_words(pagesegmenter.cols/2, pagesegmenter.cols)
-	#pagesegmenter.show_words()
-	#pagesegmenter.show_image()
-	tmp = len(os.listdir('./words'))
-	pagesegmenter.store_words(tmp)
-	word_coordinates_array += pagesegmenter.word_array
+		letter_coordinates = []
+		for word_index in range(no_words):
+			letter_coordinates.append([])
+			for letter_index in range(len(local_letter_coordinates[word_index])-1):
+				x_top_left = int(0.1 * 0.75 * local_letter_coordinates[word_index][letter_index] + word_array[word_index][0])
+				y_top_left = 0 + word_array[word_index][1]
+				x_bottom_right = int(0.1 * 0.75 * local_letter_coordinates[word_index][letter_index+1] + word_array[word_index][0])
+				y_bottom_right = word_array[word_index][3]
 
-	# Reshaping word_cordinate array into n*1*4 array = [x1,y1, x2, y2] - top left and bottom right
-	# Refer to open cv for co-ordinates convention
+				letter_coordinates[word_index].append([x_top_left,y_top_left,x_bottom_right,y_bottom_right])
+				
+		return letter_coordinates	
+		
+	def show_letters(self):
 
-	tmp = []
-	for i in range(0, len(word_coordinates_array),4):
-		tmp.append(word_coordinates_array[i:i+4])
-	
-	word_coordinates_array = tmp
-	return word_coordinates_array
+		# Making words and letter directories
+		try:
+			shutil.rmtree('./words')
+			shutil.rmtree('./letters')
+		except:
+			print("Creating Directories: Words, letters")
+		
+		os.mkdir('./words')
+		os.mkdir('./letters')
 
-def show_words(img):
-	word_array = get_word_coordinates(img)
-	im = cv2.imread(img)
-	im = cv2.resize(im,(0,0),fx=0.75,fy=0.75)
+		letter_array = self.get_letter_coordinates()
+		im = cv2.imread(self.img)
+		im = cv2.resize(im,(0,0),fx=0.75,fy=0.75)
 
-	for i in range(0, len(word_array)-1):
-		cv2.rectangle(im,(word_array[i][0],word_array[i][1]),(word_array[i][2],word_array[i][3]),0,1)
-	cv2.imshow('t',im)
-	cv2.waitKey()
-
-def get_letter_coordinates(img):
-	
-	# Making words and letter directories
-	try:
-		shutil.rmtree('./words')
-		shutil.rmtree('./letters')
-	except:
-		print("Creating Directories: Words, letters")
-	
-	os.mkdir('./words')
-	os.mkdir('./letters')
-	word_array = get_word_coordinates(img)
-	no_words = len(os.listdir('./words')) - 1
-	#no_words = 20
-	local_letter_coordinates = []
-	for index in range(no_words):
-		word_img = './words/' + str(index) + '.png'
-		word = letter_finder(word_img)
-		y = word.find_line()
-		word.remove_line(y)
-		word.find_letters(0,0,word.cols,word.final_image.shape[0])
-		word.store_cropped_letters(index)
-		local_letter_coordinates.append(word.letter_matrix)
-
-	# Converting letters into global coordinate frame
-	# Structure of letter_coordinates = n * m * 4
-	# n = number of words
-	# m = number of letters in the words
-	# 4 = top left and bottom right corner of box
-
-	letter_coordinates = []
-	for word_index in range(no_words):
-		letter_coordinates.append([])
-		for letter_index in range(len(local_letter_coordinates[word_index])-1):
-			x_top_left = int(0.1 * 0.75 * local_letter_coordinates[word_index][letter_index] + word_array[word_index][0])
-			y_top_left = 0 + word_array[word_index][1]
-			x_bottom_right = int(0.1 * 0.75 * local_letter_coordinates[word_index][letter_index+1] + word_array[word_index][0])
-			y_bottom_right = word_array[word_index][3]
-
-			letter_coordinates[word_index].append([x_top_left,y_top_left,x_bottom_right,y_bottom_right])
-			
-	return letter_coordinates	
-	
-def show_letters(img):
-
-	# Making words and letter directories
-	try:
-		shutil.rmtree('./words')
-		shutil.rmtree('./letters')
-	except:
-		print("Creating Directories: Words, letters")
-	
-	os.mkdir('./words')
-	os.mkdir('./letters')
-
-	letter_array = get_letter_coordinates(img)
-	im = cv2.imread(img)
-	im = cv2.resize(im,(0,0),fx=0.75,fy=0.75)
-
-	for word_index in range(0,len(letter_array)):
-		for letter_index in range(0,len(letter_array[word_index])):
-			cv2.rectangle(im,(letter_array[word_index][letter_index][0],letter_array[word_index][letter_index][1]),(letter_array[word_index][letter_index][2],letter_array[word_index][letter_index][3]),0,1)
-	cv2.imshow('Segmented image',im)
-	cv2.waitKey()
+		for word_index in range(0,len(letter_array)):
+			for letter_index in range(0,len(letter_array[word_index])):
+				cv2.rectangle(im,(letter_array[word_index][letter_index][0],letter_array[word_index][letter_index][1]),(letter_array[word_index][letter_index][2],letter_array[word_index][letter_index][3]),0,1)
+		cv2.imshow('Segmented image',im)
+		cv2.waitKey()
 
 ## To read image
 #img = './../../pages/3.jpg'
-#show_letters(img)
+#pagesegmenter = pagesegmenter(img)
+#pagesegmenter.show_letters()
 

@@ -5,7 +5,7 @@
 ### imports ####################################################################################
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
 import os
 import shutil
 ###############################################################################################
@@ -61,7 +61,7 @@ class word_finder:
 				for y in range(line_matrix[i],line_matrix[i+1]):
 					if self.cimg[y][x] == 255:
 						count += 1			
-				x_count_matrix[i/2].append(count)
+				x_count_matrix[i//2].append(count)
 		#print("count for words has been obtained")		
 		self.x_count_matrix = x_count_matrix	
 		#print(len(x_count_matrix[0]))
@@ -83,11 +83,11 @@ class word_finder:
 		word_array = []
 		
 		for y in range(0,len(self.line_matrix)-2,2):
-			for x in range(1,len(self.word_matrix[y/2])-2,2):
-				if self.word_matrix[y/2][x+1] - self.word_matrix[y/2][x] > 4: #change 4 to a smaller number to include punctuations.
-					word_array.append(self.word_matrix[y/2][x] - 3)
+			for x in range(1,len(self.word_matrix[y//2])-2,2):
+				if self.word_matrix[y//2][x+1] - self.word_matrix[y//2][x] > 4: #change 4 to a smaller number to include punctuations.
+					word_array.append(self.word_matrix[y//2][x] - 3)
 					word_array.append(self.line_matrix[y]-5)
-					word_array.append(self.word_matrix[y/2][x+1] + 3)
+					word_array.append(self.word_matrix[y//2][x+1] + 3)
 					word_array.append(self.line_matrix[y+1]+2)
 		self.word_array = word_array   #ultimate array to find words, formate (x1,y1,x2,y2) top left and bottom right corner of word
 		#print("word array has been created")				
@@ -113,15 +113,15 @@ class word_finder:
 		print('storing words.....')
 		for i in range(0,len(self.word_array),4):
 			cropped = self.img_color[self.word_array[i+1]:self.word_array[i+3],self.word_array[i]:self.word_array[i+2]]
-			cv2.imwrite('words/'+str(no_words + i/4)+'.png',cropped)
+			cv2.imwrite('words/'+str(no_words + i//4)+'.png',cropped)
 		#print('words have been stored ......')
 
 ################################ HANDLER FUNCTIONS FOR WORDS #########################################
 	def segment_page_into_words(self):
-		self.find_words(20,self.cols/2)
+		self.find_words(20,self.cols//2)
 		self.store_words(0)
 		no_words = len(os.listdir('./words'))		
-		self.find_words(self.cols/2,self.cols)
+		self.find_words(self.cols//2,self.cols)
 		self.store_words(no_words)		
 
 #############################################################################################
@@ -148,7 +148,7 @@ class letter_finder:
 					count += 1
 			count_matrix.append(count)
 		for i in range(len(count_matrix)-2,0,-1):
-			if count_matrix[i] > int(self.cols/5) :
+			if count_matrix[i] > int(self.cols//5) :
 				bottom_line = i
 				break 
 		return (count_matrix,bottom_line)
@@ -253,11 +253,11 @@ class pagesegmenter:
 	def get_word_coordinates(self):
 		# This functions returns an nx1x4 array of co-ordinates of the letters
 		pagesegmenter = word_finder(self.img)
-		pagesegmenter.find_words(20,pagesegmenter.cols/2)
+		pagesegmenter.find_words(20,pagesegmenter.cols//2)
 		word_coordinates_array = pagesegmenter.word_array
 		#pagesegmenter.show_words()
 		pagesegmenter.store_words(0)
-		pagesegmenter.find_words(pagesegmenter.cols/2, pagesegmenter.cols)
+		pagesegmenter.find_words(pagesegmenter.cols//2, pagesegmenter.cols)
 		#pagesegmenter.show_words()
 		#pagesegmenter.show_image()
 		tmp = len(os.listdir('./words'))
@@ -364,8 +364,8 @@ class pagesegmenter:
 		return x_test
 
 # To read image
-img = './../../pages/3.jpg'
-pagesegmenter = pagesegmenter(img)
-letter_coordinates = pagesegmenter.get_letter_coordinates()
+#img = './../../pages/3.jpg'
+#pagesegmenter = pagesegmenter(img)
+#letter_coordinates = pagesegmenter.get_letter_coordinates()
 #pagesegmenter.get_letters_for_classification(letter_coordinates, './letters/')
 

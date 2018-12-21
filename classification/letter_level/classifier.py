@@ -30,7 +30,7 @@ class OCRclassifier:
 		# load weights into new model
 		opt = optimizers.SGD(lr=0.01)
 		self.model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
-		self.indextoenglish = pd.read_csv('./dict.csv')['itrans']
+		self.indextoenglish = pd.read_csv(model_dir + 'dict.csv')['itrans']
 
 	def classify(self, x_test):
 

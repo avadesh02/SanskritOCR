@@ -18,7 +18,6 @@ from classification.letter_level.classifier import OCRclassifier
 app = Flask(__name__, template_folder='./UI/templates', static_url_path = "/words")
 app.config['SECRET_KEY'] = 'oh_so_secret'
 
-
 @app.route('/')
 def home():
 	return render_template('home.html')
@@ -42,6 +41,8 @@ def image_get():
 
 @app.route('/image/segment/letters')
 def image_segment():
+
+	global x_test
 	try:
 		shutil.rmtree('./words')
 		shutil.rmtree('./letters')
@@ -54,16 +55,19 @@ def image_segment():
 	img = './tmp/page/image.jpg'
 	imagesegmenter = pagesegmenter(img)
 	letter_array = imagesegmenter.get_letter_coordinates()
+	global x_test
 	x_test = imagesegmenter.get_letters_for_classification(letter_array,'./letters/')	
 	session['letter_array'] = letter_array
-	#session['x_test'] = x_test
 	return redirect(url_for('image_classify_letters'))
+	#return redirect(url_for('image_segmented_show'))
 
 @app.route('/image/classify/letters')
 def image_classify_letters():
-	
 	classifier = OCRclassifier("./classification/letter_level/")
-	itrans_array = classifier.classify(session['x_test'])
+	itrans_array = classifier.classify(x_test)
+	session['itrans_array'] = itrans_array
+	return redirect(url_for('image_segmented_show'))
+	
 
 @app.route('/image/segment/show')
 def image_segmented_show():

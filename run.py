@@ -13,7 +13,7 @@ import os
 import sys
 import shutil
 from segmentation.ipsegmentation.pagesegmenter import pagesegmenter
-
+from classification.letter_level.classifier import OCRclassifier
 
 app = Flask(__name__, template_folder='./UI/templates', static_url_path = "/words")
 app.config['SECRET_KEY'] = 'oh_so_secret'
@@ -54,10 +54,16 @@ def image_segment():
 	img = './tmp/page/image.jpg'
 	imagesegmenter = pagesegmenter(img)
 	letter_array = imagesegmenter.get_letter_coordinates()
-	#letter_array = imagesegmenter.get_word_coordinates()
-	
+	x_test = imagesegmenter.get_letters_for_classification(letter_array,'./letters/')	
 	session['letter_array'] = letter_array
-	return redirect(url_for('image_segmented_show'))
+	#session['x_test'] = x_test
+	return redirect(url_for('image_classify_letters'))
+
+@app.route('/image/classify/letters')
+def image_classify_letters():
+	
+	classifier = OCRclassifier("./classification/letter_level/")
+	itrans_array = classifier.classify(session['x_test'])
 
 @app.route('/image/segment/show')
 def image_segmented_show():
@@ -77,5 +83,7 @@ def upload_letters(filename):
 ################################################################################################
 
 
+
+############################################################################################
 if __name__ == '__main__':
 	app.run(debug=True)

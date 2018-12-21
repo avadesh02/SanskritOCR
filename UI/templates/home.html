@@ -15,6 +15,10 @@
 	<div id = "image_digitization">
 		<form action = "{{(url_for('image_get'))}}" method = "POST" enctype = "multipart/form-data">
 			<input type = "file" id = "pic" name = "page" accept = "image/*">
+			<input type = "submit" value = "Segment">
+		</form>
+		<form action = "{{(url_for('image_get'))}}" method = "POST" enctype = "multipart/form-data">
+			<input type = "file" id = "pic" name = "page" accept = "image/*">
 			<input type = "submit" value = "Digitize">
 		</form>
 	</div>	

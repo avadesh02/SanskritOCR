@@ -39,3 +39,9 @@ print("evaluating..")
 score = model.evaluate(X, Y, verbose=1)
 for i in range(0,len(model.metrics_names)):	
 	print("%s: %.2f%%" % (model.metrics_names[i], score[i]*100))
+
+
+
+
+
+

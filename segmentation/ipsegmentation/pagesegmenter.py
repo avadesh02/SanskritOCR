@@ -296,8 +296,8 @@ class pagesegmenter:
 		os.mkdir('./words')
 		os.mkdir('./letters')
 		word_array = self.get_word_coordinates()
-		no_words = len(os.listdir('./words')) - 1
-		#no_words = 20
+		#no_words = len(os.listdir('./words')) - 1
+		no_words = 10
 		local_letter_coordinates = []
 		for index in range(no_words):
 			word_img = './words/' + str(index) + '.png'
@@ -313,7 +313,7 @@ class pagesegmenter:
 		# n = number of words
 		# m = number of letters in the words
 		# 4 = top left and bottom right corner of box
-
+		## Tmp remove the following line
 		letter_coordinates = []
 		for word_index in range(no_words):
 			letter_coordinates.append([])
@@ -349,8 +349,23 @@ class pagesegmenter:
 		cv2.imshow('Segmented image',im)
 		cv2.waitKey()
 
-## To read image
-#img = './../../pages/3.jpg'
-#pagesegmenter = pagesegmenter(img)
-#pagesegmenter.show_letters()
+
+	def get_letters_for_classification(self,letter_array,letter_dir):
+		## returns an array of letter image N*32*32*3 to CNN for classification
+		x_test = []	
+		for word_index in range(0,len(letter_array)):
+			for letter_index in range(0,len(letter_array[word_index])):
+				## letter = img[y1:y2, x1:x2]
+				letter = cv2.imread(letter_dir + str(word_index) + str(letter_index) + '.png')
+				letter = cv2.resize(letter,(32,32))
+				x_test.append(letter)
+	
+		x_test = np.asarray(x_test)
+		return x_test
+
+# To read image
+img = './../../pages/3.jpg'
+pagesegmenter = pagesegmenter(img)
+letter_coordinates = pagesegmenter.get_letter_coordinates()
+#pagesegmenter.get_letters_for_classification(letter_coordinates, './letters/')
 

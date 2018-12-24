@@ -1,9 +1,15 @@
+# Contains code for segmenting image into words and saving them in different directory
+# AUTHOR = Parth Batra
+
 import cv2
 
+#reading an image
 img = cv2.imread(r"C:\Users\Dell\Desktop\SanskritOCR\source\bw2.jpg")
 
+#to combine 2 codes rather than changing variables(temporarily)
 image = img
 
+#resize image to get enough spaces in images
 img = cv2.resize(img, (image.shape[1]*5, image.shape[0]*5))
 
 # convert to grayscale
@@ -24,7 +30,7 @@ thresh = cv2.erode(thresh,None,iterations = 3)
 _,contours, _= cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
 # For each contour, find the bounding rectangle and draw it
-# cropping and saving to another dir ./words
+# cropping and saving to another dir ./words (make sure it exists)
 #loop for each word
 for cnt in contours:
     x,y,w,h = cv2.boundingRect(cnt)

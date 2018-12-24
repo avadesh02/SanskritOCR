@@ -9,8 +9,8 @@ import pandas
 
 class textconverter:
 	
-	def __init__(self):
-		self.itransdict = pandas.read_excel('itransdict.xlsx') 
+	def __init__(self, dir_to_xlsx):
+		self.itransdict = pandas.read_excel(dir_to_xlsx + 'itransdict.xlsx') 
 		self.english_input = self.itransdict['INPUT'].values
 		self.input_type = self.itransdict['INPUT-TYPE'].values
 		self.unicodemap = self.itransdict['#sanskrit'].values
@@ -76,8 +76,10 @@ class textconverter:
 						# Removing halanth for visarga situation
 						unicode_index = np.max(np.where(self.english_input == letter[:-1]))
 						sanskrit_word = sanskrit_word + self.unicodemap[unicode_index]
+						
 					else:
 						#print(letter[:-1])
+						#print(self.input_type[np.where(self.english_input == str(letter[:-1]))])
 						unicode_index = np.max(np.where(self.english_input == letter[:-1]))
 						sanskrit_word = sanskrit_word + self.unicodemap[unicode_index] + self.unicodemap[105]
 									
@@ -93,4 +95,32 @@ class textconverter:
 		sanskrit_word_uni = self.englishtosanskritunicode(word)
 		return sanskrit_word_uni.encode().decode('unicode-escape')
 
+	def letterstoword(self,letter_array,itransarray):
+
+			## This function converts the array of itrans letter predicted by classifier to words in itrans
+			## Letter array is obtained from pagesegmenter.get_letter_coordinates()
+			## itransarray is the array of classified letters from the classifier
+
+
+		word_array = []
+		sanskrit_word_array = []
+			
+		for word_index in range(0,len(letter_array)):
+			word = ''.join(itransarray[:len(letter_array[word_index])])	
+			word_array.append(word)
+			itransarray = itransarray[len(letter_array[word_index]):]
+				
+		return word_array
+
+	def englishtosanskritarray(self,word_array):
+		# converts an array of itrans words to array of sanskrit words
+		sanskrit_word_array = []
+		for word in word_array:
+			sanskrit_word = self.englishtosanskrit(word)
+			sanskrit_word_array.append(sanskrit_word)
+			
+		return sanskrit_word_array
+
+
 		
+

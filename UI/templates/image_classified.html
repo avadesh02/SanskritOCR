@@ -1,0 +1,32 @@
+<html>
+
+	<center><h1><strong>
+                Welcome to the DevDigitizer Home Page
+        </strong></h1></center>
+
+        <hr>
+	
+        <h2><center>Classified Page</center></h2>
+
+        <hr>
+
+	<table cellspacing="0px">
+		<tr>
+		</tr>
+		<tr>
+				<div id='segmented_words'>
+					{%for w in range(0,10)%}
+						{% set word = w|string + '.png' -%}
+						<td>
+							<img src = "{{url_for('upload_words', filename=word)}}">
+							{{ sanskrit_word_array[w] }}
+						</td>
+					{%endfor%}
+				</div>
+		</tr>
+	</table>
+
+
+
+
+</html>

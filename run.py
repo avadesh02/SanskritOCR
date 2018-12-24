@@ -14,6 +14,8 @@ import sys
 import shutil
 from segmentation.ipsegmentation.pagesegmenter import pagesegmenter
 from classification.letter_level.classifier import OCRclassifier
+from utils.textconverter import textconverter
+
 
 app = Flask(__name__, template_folder='./UI/templates', static_url_path = "/words")
 app.config['SECRET_KEY'] = 'oh_so_secret'
@@ -66,14 +68,20 @@ def image_classify_letters():
 	classifier = OCRclassifier("./classification/letter_level/")
 	itrans_array = classifier.classify(x_test)
 	session['itrans_array'] = itrans_array
-	return redirect(url_for('image_segmented_show'))
+	ttconverter = textconverter('./utils/')
+	word_array = ttconverter.letterstoword(session['letter_array'], itrans_array)
+	sanskrit_word_array = ttconverter.englishtosanskritarray(word_array)
+	session['sanskrit_word_array'] = sanskrit_word_array
+	return redirect(url_for('image_classified_show'))
 	
 
-@app.route('/image/segment/show')
+@app.route('/image/segmented/show')
 def image_segmented_show():
 	return render_template('image_segmented.html',letter_array = session['letter_array'])
 
-
+@app.route('/image/classified/show')
+def image_classified_show():
+	return render_template('image_classified.html',letter_array = session['letter_array'], sanskrit_word_array = session['sanskrit_word_array'])
 
 
 @app.route('/upload/words/<filename>')

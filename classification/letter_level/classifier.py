@@ -22,11 +22,11 @@ class OCRclassifier:
 
 	def __init__(self, model_dir):
 		# load json and create model
-		json_file = open(model_dir + 'Results/Final_model.json', 'r')
+		json_file = open(model_dir + 'Results/model.json', 'r')
 		loaded_model_json = json_file.read()
 		json_file.close()
 		self.model = model_from_json(loaded_model_json)
-		self.model.load_weights(model_dir + "Results/Final_model.h5")
+		self.model.load_weights(model_dir + "Results/model.h5")
 		# load weights into new model
 		opt = optimizers.SGD(lr=0.01)
 		self.model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])

@@ -33,7 +33,7 @@ class OCRclassifier:
 		self.indextoenglish = pd.read_csv(model_dir + 'dict.csv')['itrans']
 
 	def classify(self, x_test):
-
+		x_test = x_test/255.0
 		result = self.model.predict_classes(x_test)
 		result_itrans = []
 		# Converting to english labels using dict	

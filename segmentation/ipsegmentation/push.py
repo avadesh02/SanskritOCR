@@ -22,7 +22,7 @@ class segment:
         print("This image is ", type(image), "with dimensions", image.shape,"\n")
 
     # attempt to remove background
-    # TODO: TWEAK THRESHOLD AND TRY TO ELIMINATE THEM
+    # TODO: TRY TO ELIMINATE THEM
     def bg_filter(self, image,):
         color_select = np.copy(image)
 
@@ -94,6 +94,8 @@ class segment:
 
     # converting the processed text into separate lines
     def img2line(self, image, ori):
+        k = 0
+        p = 0
 
         ori = cv2.resize(ori, (0, 0), fx=1.69, fy=1.69)
 
@@ -174,9 +176,8 @@ class segment:
         cv2.waitKey(0)
 
         def line2words(image):
-            count = 0
-
-            image = cv2.resize(image, (0, 0), fx=1.3, fy=1.3)
+            #count = 0
+            #image = cv2.resize(image, (0, 0), fx=1.3, fy=1.3)
 
             # convert to 'grayscale' image
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -217,8 +218,8 @@ class segment:
                 # saving into words folder
                 ##FOR SEPARATE PAGES WE CAN EDIT NOMENCLATURE BY INTRODUCING ANOTHER STRING OF PAGE NO. LIKE [+str(text_image_no.)]
                 # cv2.imwrite("words/2."+ str(count) +".jpg", image[y:y+h, x:x+w])
-
-            display_words(ori,co_array, heights)
+                print(i)
+                display_words(ori,co_array,heights,i)
 
             print("Areas:", area)
             print("(x,y,w,h):", co_array)
@@ -228,13 +229,14 @@ class segment:
             cv2.imshow('res', thresh_color)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-
-        def display_words(ori, co_array, heights):
-            for i in range(0, len(co_array)):
-                cv2.rectangle(ori, (co_array[i][0], heights[i] + co_array[i][1]),(co_array[i][0] + co_array[i][2], heights[i] + co_array[i][1] + co_array[i][3]),(0, 255, 0), 2)
-
-            cv2.imshow("ori",ori)
+        #display words on original image
+        def display_words(ori, co_array, heights,i):
+                for j in range(0,len(co_array)):
+                    cv2.rectangle(ori, (co_array[j][0], heights[i] + co_array[j][1]),(co_array[j][0] + co_array[j][2], heights[i] + co_array[j][1] + co_array[j][3]),(0, 255, 0), 2)
+                i = i + 1
+                cv2.imshow("ori",ori)
         # for viewing and separating images
+
         for i in range(0, l - 1):
                 cv2.imshow("line_sample" + str(i+1), image[upper[i]: lower[i], :])
                 cv2.waitKey(0)

@@ -1,0 +1,7 @@
+INstructions to use the files
+
+1.	python img2word.py <path to img>		will give "words.npy", <path to image in this case is "./Data/image_text.jpg">
+
+2. 	python word2letter.py					will take words.npy and give letters.npy
+
+3. 	python predictClass.py 					will predict class of each letter by taking letter.py

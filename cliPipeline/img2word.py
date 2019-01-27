@@ -130,8 +130,9 @@ class segment:
         (cx, cy), (w, h), ang = ret
         if w < h:
             w, h = h, w
-            ang += 90
-
+	    ### TODO: We need to fix this issue. We can not hard code modification of this sort. it has to depend on the input image 
+		### to some level at least. Use some type of feedback...
+            ang += 0 # 90
         # (4) Find rotated matrix, do rotation
         M = cv2.getRotationMatrix2D((cx, cy), ang, 1.0)
         rotated = cv2.warpAffine(threshed, M, (image.shape[1], image.shape[0]))
@@ -238,7 +239,10 @@ class segment:
             thresh = cv2.erode(thresh, None, iterations=3)
 
             # Find the contours
-            _, contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+	    ### change this to the line below if using python 3
+            #_, contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+	    ### change this to the line below if using python 2
+            contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
             co_array = []
             area = []

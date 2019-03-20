@@ -20,6 +20,7 @@ from scipy.ndimage import interpolation as inter
 import os
 import shutil
 import sys
+
 #initialising class "segment"
 class segment:
     def __init__(self,image):
@@ -130,9 +131,8 @@ class segment:
         (cx, cy), (w, h), ang = ret
         if w < h:
             w, h = h, w
-	    ### TODO: We need to fix this issue. We can not hard code modification of this sort. it has to depend on the input image 
-		### to some level at least. Use some type of feedback...
-            ang += 0 # 90
+            ang += 90
+
         # (4) Find rotated matrix, do rotation
         M = cv2.getRotationMatrix2D((cx, cy), ang, 1.0)
         rotated = cv2.warpAffine(threshed, M, (image.shape[1], image.shape[0]))
@@ -239,10 +239,7 @@ class segment:
             thresh = cv2.erode(thresh, None, iterations=3)
 
             # Find the contours
-	    ### change this to the line below if using python 3
-            #_, contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-	    ### change this to the line below if using python 2
-            contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+            _, contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
             co_array = []
             area = []
@@ -313,16 +310,24 @@ class segment:
 # In[ ]:
 
 
-
-
-
+print('Hello')
+img = cv2.imread('./Data/image_text.jpg')
+#img = cv2.resize(img,(0,0),fx = 2.5,fy = 2.5)
+ori = img
+tt = segment(img)
+tt.image_para_calc(img)
+img = tt.bg_filter(img)
+binary = tt.img2binary(img)
+skew_fix = tt.skew_fix(binary)
+result = tt.img2line(binary, ori)
+'''
 # In[69]:
 
 if(len(sys.argv) < 2):
 	print("Give command line argument")
 else:
-	
-	img = cv2.imread(sys.argv[1])
+	print(sys.argv[2])
+	img = cv2.imread(sys.argv[2])
 	#img = cv2.resize(img,(0,0),fx = 2.5,fy = 2.5)
 	ori = img
 	tt = segment(img)
@@ -331,6 +336,8 @@ else:
 	binary = tt.img2binary(img)
 	skew_fix = tt.skew_fix(binary)
 	result = tt.img2line(binary, ori)
+
+
 
 
 # In[70]:
@@ -342,4 +349,4 @@ for img in result:
     cv2.destroyAllWindows()
     
 np.save("words",result)
-
+'''

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <table cellspacing="0px">
+        <tr>
+        <td width="35%" >
+            <div id="uploaded_page" align="left" style="border:3px solid black;width=500px">
+              <img src = "{{url_for('upload_page',filename='image.jpg')}}" style="width:100%">
+            </div>
+          </td>
+          <td width="40%">
+            <div id='uploaded_image' align = 'left' style="border:3px solid black;">
+              <form method="POST" action="{{url_for('get_data')}}">
+              {% for l in range(start,no_words)%}
+                {% if l % 20 == 0 and l != 0 %}
+                  <br/>
+                    {% set letter = l|string + '.png'%}
+                    {% set letter_index = l|string%}
+                    <table style="display: inline-block;border-spacing:0px" >
+                      <tr>
+                        <td align = "center">
+                          <img src = "{{url_for('upload_letters',filename=letter)}}">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="input" value="" name = 'label' style="width:30px;height:25px" maxlength="6">
+                        </td>
+                      </tr>
+                {% else %}
+                    {% set letter = l|string + '.png'%}
+                    {% set letter_index = l|string%}
+                    <table style="display: inline-block;border-spacing:0px">
+                      <tr>
+                        <td align="center">
+                          <img src = "{{url_for('upload_letters',filename=letter)}}">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="input" value="" name = 'label' style="width:30px;height:25px" maxlength="6">
+                        </td>
+                      </tr>
+                    </table>
+                {% endif %}
+                &nbsp
+              {% endfor %}
+                <center>
+                  <input type="submit" value="enter" action="" style="background-color:yellow;color:blue">
+                </center>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <table>
+  </body>
+</html>

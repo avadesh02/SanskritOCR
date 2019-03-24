@@ -15,7 +15,7 @@ def array_to_files():
     for i in range(len(image_array)):
         cv2.imwrite('letters/' + str(i) + '.png', image_array[i])
 
-array_to_files()
+
 
 @app.route('/words/process')
 def segment_words():
@@ -26,6 +26,7 @@ def segment_words():
 		os.makedirs(final_dir)
 	else:
 		os.makedirs(final_dir)
+    array_to_files()
 	print('letters have been stored...')
 	print('uploading letters....')
 	session['start'] = 0

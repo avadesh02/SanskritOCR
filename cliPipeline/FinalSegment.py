@@ -529,8 +529,8 @@ def letterSegmentation(ls):
 		lt = leftsLs[i]
 		rt = rightsLs[i]
 		letters.append(thirdLevelSegmentation(img,head,lt,rt))
-	'''
-	# #     Second Level Segmentation
+	
+	# Second Level Segmentation
 	del leftsLs,rightsLs
 	leftsLs = []
 	rightsLs = []
@@ -541,7 +541,7 @@ def letterSegmentation(ls):
 		lt,rt = secondLevelSegmentation(img,up,dn)
 		leftsLs.append(lt)
 		rightsLs.append(rt)
-	'''    
+
 	return leftsLs,rightsLs,headerLs,np.asarray(letters)
 
 
@@ -610,12 +610,11 @@ res = makeCollage(letters_bw)
 cv2.imshow("res",res)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-'''
+
 res = makeCollage(letters_ori)
 cv2.imshow("res",res)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-'''
 
 
 # In[ ]:

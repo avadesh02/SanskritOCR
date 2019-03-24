@@ -2,3 +2,6 @@ Instructions to use the files
 
 	python FinalSegment.py ./pages/<test_Image> 
 
+					OR
+
+	python test.py ./pages/<test_Image>

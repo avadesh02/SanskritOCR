@@ -5,7 +5,7 @@
 	<body>
 		<div id='uploaded_image' align = 'left' style="border:3px solid black;">
 			<form method="POST" action="{{url_for('get_confirmation')}}">
-			{% for w in range(start,no_words)%}
+			{% for l in range(start,no_words)%}
 						{% set letter = l|string + '.png'%}
 						{% set letter_index = l|string%}
 						<table style="display: inline-block;border-spacing:0px">
@@ -16,11 +16,10 @@
 							</tr>
 							<tr>
 								<td>
-									{{label_array[word_index][l]}}
+									{{label_array[l]}}
 								</td>
 							</tr>
 						</table>
-					{% endfor %}
 				&nbsp
 			{% endfor %}
 				<center>

@@ -1,5 +1,5 @@
-
-from flask import *
+# This code is only for displaying, labeling and collecting the segmented letters.
+from flask import *  #URL - http://127.0.0.1:5000/words/process
 import cv2
 import numpy as np
 import os
@@ -19,37 +19,37 @@ def array_to_files():
 
 @app.route('/words/process')
 def segment_words():
-	current_dir = os.getcwd()
-	final_dir = os.path.join(current_dir, r'letters')
-	if os.path.exists(final_dir):
-		shutil.rmtree(final_dir)
-		os.makedirs(final_dir)
-	else:
-		os.makedirs(final_dir)
+    current_dir = os.getcwd()
+    final_dir = os.path.join(current_dir, r'letters')
+    if os.path.exists(final_dir):
+        shutil.rmtree(final_dir)
+        os.makedirs(final_dir)
+    else:
+        os.makedirs(final_dir)
+    print('letters have been stored...')
     array_to_files()
-	print('letters have been stored...')
-	print('uploading letters....')
-	session['start'] = 0
-	session['flag'] = 0
-	session['no_words'] = session['start'] + 250
-	return redirect(url_for('dev_home'))
+    print('uploading letters....')
+    session['start'] = 0
+    session['flag'] = 0
+    session['no_words'] = session['start'] + 250
+    return redirect(url_for('dev_home'))
 
 @app.route('/get/nextset',methods=['POST','GET'])
 def get_next_set():
-	value = 250
-	limit = int(len(os.listdir('./letters')))
+    value = 250
+    limit = int(len(os.listdir('./letters')))
 #	value = request.form['value']
 #	print(value)
-	if limit -session['start'] < 260 and limit -session['start'] > 0:
-		print('if statment worked')
-		print(session['flag'])
-		session['start'] += 250
-		session['no_words'] = limit-1
-	elif limit - session['start'] > 250:
-		print('elif is working')
-		session['start'] += 250
-		session['no_words'] = session['start'] + 250
-	return redirect(url_for('dev_home'))
+    if limit -session['start'] < 260 and limit -session['start'] > 0:
+        print('if statment worked')
+        print(session['flag'])
+        session['start'] += 250
+        session['no_words'] = limit-1
+    elif limit - session['start'] > 250:
+        print('elif is working')
+        session['start'] += 250
+        session['no_words'] = session['start'] + 250
+    return redirect(url_for('dev_home'))
 
 @app.route('/get/lastset',methods=['POST','GET'])
 def go_back_one_set():

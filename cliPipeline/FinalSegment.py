@@ -98,12 +98,12 @@ def continuousSubsequence(x,th,diff):
 	up = []
 	down =[]
 	i = 0
-	while(i<len(x)):
+	while(i<len(x)-1):
 		if(x[i] > th):
 		    up.append(i)
 	#             print("up: " +str(i),end='\t')
 		    i = i+1
-		    while(not(x[i] <= th)):
+		    while(not(x[i] <= th) and i<len(x)-1):
 		        i = i+1
 		    down.append(i)
 	#             print("down: " +str(i))

@@ -7,7 +7,7 @@ import sys
 import _pickle as pickle
 import shutil
 
-app = Flask(__name__,static_url_path = "/words", template_folder='ORC-UI/TemplatesAndCSS')
+app = Flask(__name__,static_url_path = "/words", template_folder='UI/templates')
 app.config['SECRET_KEY'] = 'oh_so_secret'
 
 def array_to_files():

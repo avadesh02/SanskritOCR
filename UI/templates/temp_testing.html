@@ -1,0 +1,31 @@
+<html>
+	<center><head>Please check for any errors in the input</head></center><br/><br/>
+	<center><p>InCase of an error just press the BACK button of the browser and EDIT the text in the previous page and click enter.<br/> If there is no error please click on SUBMIT.</p></center>
+
+	<body>
+		<div id='uploaded_image' align = 'left' style="border:3px solid black;">
+			<form method="POST" action="{{url_for('get_confirmation')}}">
+			{% for l in range(start,no_words)%}
+						{% set letter = l|string + '.png'%}
+						{% set letter_index = l|string%}
+						<table style="display: inline-block;border-spacing:0px">
+							<tr>
+								<td align="center">
+									<img src = "{{url_for('upload_letters',filename=letter)}}">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									{{label_array[l]}}
+								</td>
+							</tr>
+						</table>
+				&nbsp
+			{% endfor %}
+				<center>
+					<input type="submit" value="submit"  style="background-color:green;color:white">
+				</center>
+			</form>
+		</div>
+	</body>
+</html>

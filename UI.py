@@ -1,5 +1,6 @@
 # This code is only for displaying, labeling and collecting the segmented letters.
-from flask import *  #URL - http://127.0.0.1:5000/words/process
+# URL - http://127.0.0.1:5000/words/process
+from flask import *
 import cv2
 import numpy as np
 import os
@@ -15,8 +16,6 @@ def array_to_files():
     for i in range(len(image_array)):
         cv2.imwrite('letters/' + str(i) + '.png', image_array[i])
 
-
-
 @app.route('/words/process')
 def segment_words():
     current_dir = os.getcwd()
@@ -30,10 +29,9 @@ def segment_words():
     array_to_files()
     print('uploading letters....')
     session['start'] = 0
-    session['flag'] = 0
     limit = int(len(os.listdir('./letters')))
-    if limit > 250:
-        session['no_words'] = session['start'] + 250
+    if limit > 150:
+        session['no_words'] = session['start'] + 150
     else:
         session['no_words'] = session['start'] + limit
     return redirect(url_for('dev_home'))
@@ -41,24 +39,20 @@ def segment_words():
 @app.route('/get/nextset',methods=['POST','GET'])
 def get_next_set():
     limit = int(len(os.listdir('./letters')))
-    if limit - session['start'] < 260 and limit - session['start'] > 0:
-        print('if statment worked')
-        print(session['flag'])
-        session['start'] += 250
-        session['no_words'] = limit-1
-    elif limit - session['start'] > 250:
-        print('elif is working')
-        session['start'] += 250
-        session['no_words'] = session['start'] + 250
+    session['start'] += 150
+    if limit - session['start'] < 170 and limit - session['start'] > 0:
+        session['no_words'] = limit
+    elif (limit - session['start']) > 150:
+        session['no_words'] = session['start'] + 150
     return redirect(url_for('dev_home'))
 
 @app.route('/get/lastset',methods=['POST','GET'])
 def go_back_one_set():
 
 	value = request.form['value']
-	if session['start'] > 0 and session['start'] >= 250:
-		session['start'] -=  250
-		session['no_words']  = session['start'] + 250
+	if session['start'] > 0 and session['start'] >= 150:
+		session['start'] -=  150
+		session['no_words']  = session['start'] + 150
 	return redirect(url_for('dev_home'))
 
 @app.route('/dev_home')
@@ -69,12 +63,9 @@ def dev_home():
 @app.route('/get/label_data',methods=['POST','GET'])
 def get_data():
 	temp_label_array = request.form.getlist('label')
-	#print(session['tmp'])
 	label_array = []
-	for l in range(session['start'],session['no_words']):
+	for l in range(len(temp_label_array)):
 		label_array.append(temp_label_array[l])
-	#print(label_array)
-	#print(no_letter_array)
 	session['target_array'] = label_array
 	return render_template('temp_testing.html',temp_label_array=temp_label_array,no_words = session['no_words'],label_array = label_array,start = session['start'])
 
@@ -83,7 +74,7 @@ def get_confirmation():
 	dataset = []
 	target_array = session['target_array']
 	index = 0
-	for l in range(session['start'],session['no_words']):
+	for l in range(len(target_array)):
 		img = 'letters/' + str(l) + '.png'
 		letter_image = cv2.imread(img)
 		dataset.append(letter_image)

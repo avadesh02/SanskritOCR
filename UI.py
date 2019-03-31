@@ -77,8 +77,10 @@ def get_confirmation():
 	for l in range(len(target_array)):
 		img = 'letters/' + str(l) + '.png'
 		letter_image = cv2.imread(img)
-		dataset.append(letter_image)
-		dataset.append(target_array[l])
+        tup = (letter_image,target_array[l])
+        dataset.apend(tup)
+		#dataset.append(letter_image)
+		#dataset.append(target_array[l])
 
 	current_dir = os.getcwd()
 	final_dir = os.path.join(current_dir, r'database')

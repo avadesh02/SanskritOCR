@@ -16,6 +16,10 @@ The Software is currently being refactored for public use and will be made avail
 4. OpenCV
 5. Flask 
 
+# Sanskrit Letter Dataset 
+The dataset used for this work is available in the following github repo :
+https://github.com/avadesh02/Sanskrit-letter-dataset/blob/master/README.md
+
 # Citing DevDigitizer
 
 If you want to cite **DevDigitizer** in your papers, please use the following bibtex line:
